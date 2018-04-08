@@ -32,6 +32,11 @@ public class Runner {
 			System.exit(1);
 		}
 
+		if (!file.exists()) {
+			System.out.println("Error: File/Path does not exist!");
+			System.exit(1);
+		}
+
 		if (file.isFile() && flags[0]) {
 			System.out.println("Error: Path does not exist!");
 			System.exit(1);
