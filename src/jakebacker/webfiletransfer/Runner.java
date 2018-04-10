@@ -1,6 +1,7 @@
 package jakebacker.webfiletransfer;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Runner {
 	private static final String[] FLAG_NAMES = {"-u", "-v"};
@@ -10,8 +11,12 @@ public class Runner {
 	private static File file;
 
 	public static void main(String[] args) {
-		setup(args);
-
+		//setup(args);
+		try {
+			Server server = new Server(new File("test.txt"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void setup(String[] args) {
