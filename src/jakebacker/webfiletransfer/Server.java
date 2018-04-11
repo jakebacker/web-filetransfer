@@ -1,5 +1,6 @@
 package jakebacker.webfiletransfer;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -35,14 +36,11 @@ public class Server {
 
 		server = HttpServer.create(address, 0);
 		server.createContext("/" + suffix, httpExchange -> {
-			/*ArrayList<String> types = new ArrayList<>();
-			types.add("application/octet-stream");
+			Headers headers = httpExchange.getResponseHeaders();
 
-			httpExchange.getResponseHeaders().put("Content-Type", types);*/
+			headers.add("Content-Type", "application/x-download");
 
-			ArrayList<String> types2 = new ArrayList<>();
-			types2.add("attachment; filename=\""+ file.getName() + "\"");
-			httpExchange.getRequestHeaders().put("Content-Disposition", types2);
+			headers.add("Content-Disposition", "attachment; filename=\""+ file.getName() + "\"");
 
 			for(List<String> l : httpExchange.getRequestHeaders().values()) {
 				for (String s : l) {
