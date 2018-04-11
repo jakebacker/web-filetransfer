@@ -18,7 +18,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Server {
 	private HttpServer server;
 
-	public Server(File file) throws IOException{
+	public Server(File file, boolean verbose) throws IOException{
+		if (verbose) {
+			System.out.println("Creating Server...");
+		}
+
 		int port =  ThreadLocalRandom.current().nextInt(0, 9999 + 1);
 		String suffix = "";
 
@@ -36,22 +40,17 @@ public class Server {
 
 		server = HttpServer.create(address, 0);
 		server.createContext("/" + suffix, httpExchange -> {
+			if (verbose) {
+				System.out.println("Connection Established, sending file...");
+			}
+
 			Headers headers = httpExchange.getResponseHeaders();
 
 			headers.add("Content-Type", "application/x-download");
 
 			headers.add("Content-Disposition", "attachment; filename=\""+ file.getName() + "\"");
 
-			for(List<String> l : httpExchange.getRequestHeaders().values()) {
-				for (String s : l) {
-					System.out.print(s);
-				}
-				System.out.println();
-			}
-
 			httpExchange.sendResponseHeaders(200, file.length());
-
-			System.out.println("Connection");
 
 			OutputStream out = httpExchange.getResponseBody();
 			FileInputStream in = new FileInputStream(file);
@@ -63,12 +62,20 @@ public class Server {
 			in.close();
 			out.flush();
 
+			if (verbose) {
+				System.out.println("File sent. Stopping server...");
+			}
+
 			server.stop(0);
+
+			if (verbose) {
+				System.out.println("Server Stopped");
+			}
 		});
 
 		server.setExecutor(null);
 		server.start();
 
-		System.out.println("Server Started at " + InetAddress.getLocalHost().getHostAddress()+ ":" + port + "/" + suffix);
+		System.out.println("Server Started at " + InetAddress.getLocalHost().getHostAddress() + ":" + port + "/" + suffix);
 	}
 }

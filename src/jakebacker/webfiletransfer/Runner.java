@@ -4,16 +4,26 @@ import java.io.File;
 import java.io.IOException;
 
 public class Runner {
-	private static final String[] FLAG_NAMES = {"-u", "-v"};
-	private static final String[] ALT_FLAG_NAMES = {"--upload", "--verbose"};
-	private static boolean[] flags = {false, false};
+	private static final String[] FLAG_NAMES = {"-u", "-v", "-h"};
+	private static final String[] ALT_FLAG_NAMES = {"--upload", "--verbose", "--help"};
+	private static boolean[] flags = {false, false, false};
 
 	private static File file;
 
 	public static void main(String[] args) {
-		//setup(args);
+		setup(args);
+		if (flags[2]) {
+			printUsage();
+			System.exit(1);
+		}
+
+		if (flags[0]) {
+			System.out.println("Uploading not yet supported!");
+			System.exit(0);
+		}
+
 		try {
-			Server server = new Server(new File("test.txt"));
+			new Server(file, flags[1]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -25,9 +35,6 @@ public class Runner {
 				for (int i=0; i<flags.length; i++) {
 					if (s.equals(FLAG_NAMES[i]) || s.equals(ALT_FLAG_NAMES[i])) {
 						flags[i] = true;
-					} else {
-						printUsage();
-						System.exit(0);
 					}
 				}
 			}
