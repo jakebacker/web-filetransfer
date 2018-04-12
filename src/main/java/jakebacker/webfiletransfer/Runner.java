@@ -13,7 +13,6 @@ public class Runner {
 
 	public static void main(String[] args) {
 		setup(args);
-
 	}
 
 	public static void setup(String[] args) {
